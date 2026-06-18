@@ -1,0 +1,16 @@
+.venv
+.git
+.gitignore
+.vscode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+instance/*.db
+RAG_based_medical_chatbot.egg-info
+Cydonia01/
+llama-medical-llm/

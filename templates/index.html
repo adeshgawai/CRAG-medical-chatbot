@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-content">
+                <h1>Medical Assistant</h1>
+                <p>Ask a question about the medical documents.</p>
+            </div>
+            <div class="header-controls">
+                <!-- Dark Mode Toggle Switch -->
+                <div class="theme-switcher">
+                    <input type="checkbox" id="theme-toggle">
+                    <label for="theme-toggle" class="slider"></label>
+                </div>
+                <!-- Logout Button -->
+                <button id="logout-btn" class="logout-btn" title="Log Out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </button>
+            </div>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will be appended here -->
+            <div class="message bot-message">
+                <p>Hello! I am your medical assistant. How can I help you today?</p>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <form id="message-form">
+                <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+                <button type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Dark Mode Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Function to set the theme
+        function setTheme(isDark) {
+            if (isDark) {
+                body.classList.remove('light-mode');
+                themeToggle.checked = true;
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-mode');
+                themeToggle.checked = false;
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Check for saved theme in localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            setTheme(false);
+        } else {
+            setTheme(true); // Default to dark mode to match the landing page
+        }
+
+        // Event listener for the toggle switch
+        themeToggle.addEventListener('change', () => {
+            setTheme(themeToggle.checked);
+        });
+
+        // --- Logout Logic ---
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout');
+                if (response.ok) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+            }
+        });
+
+
+        // --- Chat Logic ---
+        document.getElementById('message-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const userInputField = document.getElementById('user-input');
+            const userQuestion = userInputField.value.trim();
+
+            if (userQuestion === '') {
+                return;
+            }
+
+            const chatBox = document.getElementById('chat-box');
+
+            // Display user's message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user-message';
+            userMessageDiv.innerHTML = `<p>${userQuestion}</p>`;
+            chatBox.appendChild(userMessageDiv);
+
+            // Clear input field
+            userInputField.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Display a thinking indicator
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'message bot-message thinking';
+            thinkingDiv.innerHTML = `<p><span>.</span><span>.</span><span>.</span></p>`;
+            chatBox.appendChild(thinkingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // Send question to the server
+                const response = await fetch('/get_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: userQuestion }),
+                });
+
+                const data = await response.json();
+                const botAnswer = data.answer || "Sorry, I encountered an error.";
+
+                // Remove thinking indicator
+                chatBox.removeChild(thinkingDiv);
+
+                // Display bot's answer
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot-message';
+                botMessageDiv.innerHTML = `<div class="message-bubble markdown-body">${marked.parse(botAnswer)}</div>`;
+                chatBox.appendChild(botMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            } catch (error) {
+                console.error('Error:', error);
+                chatBox.removeChild(thinkingDiv);
+                const errorMessageDiv = document.createElement('div');
+                errorMessageDiv.className = 'message bot-message';
+                errorMessageDiv.innerHTML = `<p>There was an error connecting to the server. Please try again.</p>`;
+                chatBox.appendChild(errorMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>

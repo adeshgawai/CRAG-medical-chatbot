@@ -1,0 +1,307 @@
+/* --- Color Variables (Dark Slate & Teal/Emerald Accent) --- */
+:root {
+    --bg-color: #0b0f19;
+    --chat-container-bg: #111827;
+    --text-color: #f3f4f6;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --input-area-bg: #1f2937;
+    --input-border-color: rgba(255, 255, 255, 0.1);
+    --bot-message-bg: rgba(31, 41, 55, 0.5);
+    --user-message-bg: #10b981;
+    --user-message-text: #ffffff;
+    --header-gradient: linear-gradient(135deg, #111827 0%, #0b0f19 100%);
+    --button-bg: #10b981;
+    --button-hover-bg: #059669;
+}
+
+body.light-mode {
+    --bg-color: #f0f5f3;
+    --chat-container-bg: #ffffff;
+    --text-color: #0f172a;
+    --border-color: #e2e8f0;
+    --input-area-bg: #f8fafc;
+    --input-border-color: #cbd5e1;
+    --bot-message-bg: #f1f5f9;
+    --user-message-bg: #10b981;
+    --user-message-text: #ffffff;
+    --header-gradient: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+    --button-bg: #10b981;
+    --button-hover-bg: #059669;
+}
+
+
+/* --- General Styles --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-color);
+    background-image: linear-gradient(135deg, var(--bg-color) 0%, #111827 100%);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    height: 90vh;
+    max-height: 800px;
+    background-color: var(--chat-container-bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+/* --- Header --- */
+.chat-header {
+    background: var(--header-gradient);
+    color: white;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.chat-header p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* --- Chat Box --- */
+.chat-box {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    display: flex;
+    max-width: 80%;
+    line-height: 1.5;
+}
+
+.message p, .message-bubble {
+    padding: 12px 18px;
+    border-radius: 18px;
+    margin: 0;
+}
+
+.user-message {
+    align-self: flex-end;
+}
+
+.user-message p, .user-message .message-bubble {
+    background-color: var(--user-message-bg);
+    color: var(--user-message-text);
+    border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+    align-self: flex-start;
+}
+
+.bot-message p, .bot-message .message-bubble {
+    background-color: var(--bot-message-bg);
+    color: var(--text-color);
+    border-bottom-left-radius: 4px;
+}
+
+/* --- Input Area --- */
+.chat-input-area {
+    padding: 15px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--input-area-bg);
+    transition: background-color 0.3s;
+}
+
+#message-form {
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    background-color: var(--chat-container-bg);
+    color: var(--text-color);
+}
+
+#user-input:focus {
+    border-color: var(--button-bg);
+}
+
+#message-form button {
+    background-color: var(--button-bg);
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+#message-form button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+
+/* --- Theme Switcher --- */
+.theme-switcher {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.theme-switcher input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #10b981;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* --- Thinking Animation --- */
+.thinking p span {
+    display: inline-block;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+.thinking p span:nth-child(1) { animation-delay: -0.32s; }
+.thinking p span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
+/* --- Markdown Body Formatting --- */
+.markdown-body {
+    width: 100%;
+}
+
+.markdown-body > *:first-child {
+    margin-top: 0 !important;
+}
+
+.markdown-body > *:last-child {
+    margin-bottom: 0 !important;
+}
+
+.markdown-body p {
+    margin: 8px 0;
+    padding: 0 !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+
+.markdown-body ul, .markdown-body ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.markdown-body li {
+    margin-bottom: 4px;
+}
+
+.markdown-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.markdown-body th, .markdown-body td {
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.markdown-body th {
+    background-color: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+}
+
+body.dark-mode .markdown-body th {
+    background-color: rgba(255, 255, 255, 0.07);
+}
