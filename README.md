@@ -1,9 +1,6 @@
 # 🩺 MediAssist — Corrective RAG Medical Chatbot
 
 A medical question-answering chatbot built on **Corrective RAG (CRAG)** — an agentic retrieval pipeline that evaluates retrieved documents, rewrites queries, and falls back to live web search when local knowledge is insufficient. Grounded in **The Merck Manual of Diagnosis and Therapy** (19th Ed.) via a domain-specific FAISS index.
-
-> Live Demo: [Hugging Face Spaces](#) <!-- replace with your HF link -->
-
 ---
 
 ## 🧠 Why CRAG, Not Naive RAG?
